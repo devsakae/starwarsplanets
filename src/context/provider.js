@@ -4,20 +4,23 @@ import StarWarsContext from './context';
 
 function Provider({ children }) {
   const [data, setData] = useState([]);
+  const [chaves, setChaves] = useState([]);
 
   useEffect(() => {
     const fetchSWApi = async () => {
+      // const response = await fetch('https://rickandmortyapi.com/api/character');
       const response = await fetch('https://swapi.dev/api/planets');
-      const responseJson = await response.json();
-      setData(responseJson);
+      const { results } = await response.json();
+      setData(results);
+      const keys = Object.keys(results[0]);
+      setChaves(keys);
     };
     fetchSWApi();
   }, []);
-  // console.log(data.results);
 
   const context = useMemo(() => ({
-    data, setData,
-  }), [data]);
+    data, chaves,
+  }), [data, chaves]);
 
   return (
     <StarWarsContext.Provider value={ context }>
