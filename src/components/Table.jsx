@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import StarWarsContext from '../context/context';
 
 function Table() {
-  const { data, chaves } = useContext(StarWarsContext);
+  const { data, chaves, name } = useContext(StarWarsContext);
   return (
     <header>
       <table>
@@ -13,7 +13,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          { data?.map((planet) => (
+          { data?.filter((planet) => planet.name.includes(name)).map((planet) => (
             <tr key={ planet.name }>
               <td>
                 { planet.name }

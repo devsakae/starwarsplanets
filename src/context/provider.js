@@ -5,6 +5,7 @@ import StarWarsContext from './context';
 function Provider({ children }) {
   const [data, setData] = useState([]);
   const [chaves, setChaves] = useState([]);
+  const [name, setName] = useState('');
 
   useEffect(() => {
     const fetchSWApi = async () => {
@@ -18,9 +19,13 @@ function Provider({ children }) {
     fetchSWApi();
   }, []);
 
+  const searchByName = ({ target }) => {
+    setName(target.value);
+  };
+
   const context = useMemo(() => ({
-    data, chaves,
-  }), [data, chaves]);
+    data, chaves, name, searchByName,
+  }), [data, chaves, name]);
 
   return (
     <StarWarsContext.Provider value={ context }>
