@@ -6,10 +6,14 @@ function Provider({ children }) {
   const [data, setData] = useState([]);
   const [chaves, setChaves] = useState([]);
   const [name, setName] = useState('');
+  const [columnValue, setColumnValue] = useState('population');
+  const [comparison, setComparison] = useState('maior que');
+  const [number, setNumber] = useState(0);
+  const [filters, setFilters] = useState([]);
+  const [podeFiltrar, setPodeFiltrar] = useState(false);
 
   useEffect(() => {
     const fetchSWApi = async () => {
-      // const response = await fetch('https://rickandmortyapi.com/api/character');
       const response = await fetch('https://swapi.dev/api/planets');
       const { results } = await response.json();
       setData(results);
@@ -23,9 +27,57 @@ function Provider({ children }) {
     setName(target.value);
   };
 
+  const searchByColumnValue = ({ target }) => {
+    setColumnValue(target.value);
+  };
+
+  const searchByComparison = ({ target }) => {
+    setComparison(target.value);
+  };
+
+  const searchByNumber = ({ target }) => {
+    setNumber(target.value);
+  };
+
+  const filteringBy = () => {
+    setPodeFiltrar(true);
+    setFilters((prevState) => [
+      ...prevState,
+      {
+        filterColumn: columnValue,
+        filterComparison: comparison,
+        filterNumber: number,
+      },
+    ]);
+  };
+
+  const filtrandoPor = () => {
+    if (podeFiltrar) {
+      switch (comparison) {
+      case 'maior que': return data.filter((p) => p[columnValue] > Number(number));
+      case 'menor que': return data.filter((p) => p[columnValue] < Number(number));
+      default: return data.filter((p) => p[columnValue] === number);
+      }
+    }
+    return data;
+  };
+
   const context = useMemo(() => ({
-    data, chaves, name, searchByName,
-  }), [data, chaves, name]);
+    data,
+    chaves,
+    name,
+    columnValue,
+    comparison,
+    number,
+    filters,
+    searchByName,
+    searchByColumnValue,
+    searchByComparison,
+    searchByNumber,
+    filteringBy,
+    filtrandoPor,
+  }), [data, chaves, name, columnValue, comparison, number,
+    filters, filteringBy, filtrandoPor]);
 
   return (
     <StarWarsContext.Provider value={ context }>
