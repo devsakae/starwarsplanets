@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import StarWarsContext from '../context/context';
 
 function Search() {
-  const { name, searchByName, columnValue,
+  const { name, searchByName, columnValue, columnOptions,
     searchByColumnValue, comparison, filters, searchByComparison,
-    number, searchByNumber, filteringBy } = useContext(StarWarsContext);
+    number, searchByNumber, filteringBy, removeFiltro } = useContext(StarWarsContext);
   return (
     <form>
-      <div>
+      <div className="search__field">
         <label htmlFor="search_name_input">
           Pesquisar por nome:
           <input
@@ -20,7 +20,7 @@ function Search() {
           />
         </label>
       </div>
-      <div>
+      <div className="search__field">
         <label htmlFor="sbf">
           Selecione por
           <select
@@ -30,11 +30,14 @@ function Search() {
             value={ columnValue }
             onChange={ searchByColumnValue }
           >
-            <option name="sbf" value="population">population</option>
-            <option name="sbf" value="orbital_period">orbital_period</option>
-            <option name="sbf" value="diameter">diameter</option>
-            <option name="sbf" value="rotation_period">rotation_period</option>
-            <option name="sbf" value="surface_water">surface_water</option>
+            { columnOptions.filter((cop) => {
+              const tempVar = filters.map((filtro) => filtro.filterColumn);
+              return !tempVar.includes(cop);
+            })
+              .map((opt) => (
+                <option name="sbf" value={ opt } key={ opt }>
+                  { opt }
+                </option>))}
           </select>
         </label>
         <label htmlFor="scf">
@@ -70,14 +73,31 @@ function Search() {
       </div>
       <div>
         { filters.map((filtro, index) => (
-          <div key={ index } className="filtroAplicado">
+          <div key={ index } className="filtroAplicado" data-testid="filter">
             {filtro.filterColumn}
             { ' ' }
             {filtro.filterComparison}
             { ' ' }
             {filtro.filterNumber}
+            { ' ' }
+            <button
+              type="button"
+              onClick={ () => removeFiltro(filtro, false) }
+            >
+              x
+            </button>
           </div>
         )) }
+        { (filters.length > 0)
+        && (
+          <button
+            type="button"
+            data-testid="button-remove-filters"
+            onClick={ () => removeFiltro(null, true) }
+          >
+            Apagar todos filtros
+          </button>
+        ) }
       </div>
     </form>
   );

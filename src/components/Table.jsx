@@ -4,7 +4,7 @@ import StarWarsContext from '../context/context';
 function Table() {
   const { chaves, name, dadosFiltrados } = useContext(StarWarsContext);
   return (
-    <header>
+    <main>
       <table>
         <thead>
           <tr>
@@ -45,7 +45,7 @@ function Table() {
                   { planet.population }
                 </td>
                 <td>
-                  { planet.films }
+                  { planet.films.length }
                 </td>
                 <td>
                   { planet.created }
@@ -54,13 +54,13 @@ function Table() {
                   { planet.edited }
                 </td>
                 <td>
-                  { planet.url }
+                  <a href={ planet.url }>Leia mais</a>
                 </td>
               </tr>
             )) }
         </tbody>
       </table>
-    </header>
+    </main>
   );
 }
 

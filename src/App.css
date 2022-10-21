@@ -1,41 +1,45 @@
-.App {
+* {
+  font-family: Tahoma , Geneva , Verdana , sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  align-items: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)) , url('https://jovemnerd.com.br/wp-content/uploads/Banner-Kylo.jpg');
+  color: white;
+  display: flex;
+  height: 180px;
+  justify-content: center;
+}
+
+form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+main {
+  background-color: none;
+}
+
+.search__field {
+  display: flex;
+}
+
+table {
+  font-family: Tahoma , Geneva , Verdana , sans-serif;
+  font-size: small;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+th {
+  background-color: bisque;
+  height: 7vh;
 }
 
-@media ( prefers-reduced-motion : no-preference ) {
-
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  align-items: center;
-  background-color: #282c34;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  font-size: calc(10px + 2vmin);
-  justify-content: center;
-  min-height: 100vh;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+td {
+  border-bottom: 1px black solid;
+  height: 5vh;
 }

@@ -7,7 +7,9 @@ import Table from './components/Table';
 function App() {
   return (
     <Provider>
-      <Search />
+      <header>
+        <Search />
+      </header>
       <Table />
     </Provider>
   );

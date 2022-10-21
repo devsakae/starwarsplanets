@@ -12,8 +12,11 @@ function Provider({ children }) {
   const [filters, setFilters] = useState([]);
   const [dadosFiltrados, setDadosFiltrados] = useState([]);
   const [estaFiltrando, setEstaFiltrando] = useState(false);
+  const [columnOptions, setColumnOptions] = useState([]);
 
   useEffect(() => {
+    setColumnOptions(['orbital_period', 'population',
+      'diameter', 'rotation_period', 'surface_water']);
     const fetchSWApi = async () => {
       const response = await fetch('https://swapi.dev/api/planets');
       const { results } = await response.json();
@@ -83,14 +86,26 @@ function Provider({ children }) {
         filterNumber: number,
       },
     ]);
+    setColumnValue(columnOptions[0]);
     setEstaFiltrando(true);
-  }, [columnValue, comparison, number]);
+  }, [columnValue, comparison, number, columnOptions]);
+
+  const removeFiltro = useCallback((filtro, todos) => {
+    if (todos) {
+      setFilters([]);
+    } else {
+      setFilters(filters.filter((f) => f.filterColumn !== filtro.filterColumn));
+    }
+    setDadosFiltrados(data);
+    setEstaFiltrando(true);
+  }, [filters, data]);
 
   const context = useMemo(() => ({
     data,
     chaves,
     name,
     columnValue,
+    columnOptions,
     comparison,
     number,
     filters,
@@ -100,8 +115,9 @@ function Provider({ children }) {
     searchByComparison,
     searchByNumber,
     filteringBy,
-  }), [data, chaves, name, columnValue, comparison, number,
-    filters, dadosFiltrados, filteringBy]);
+    removeFiltro,
+  }), [data, chaves, name, columnValue, columnOptions, comparison, number,
+    filters, dadosFiltrados, filteringBy, removeFiltro]);
 
   return (
     <StarWarsContext.Provider value={ context }>
