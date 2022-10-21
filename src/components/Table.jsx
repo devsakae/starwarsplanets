@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import StarWarsContext from '../context/context';
 
 function Table() {
-  const { data, chaves, name, filtrandoPor } = useContext(StarWarsContext);
+  const { chaves, name, dadosFiltrados } = useContext(StarWarsContext);
   return (
     <header>
       <table>
@@ -13,7 +13,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          { filtrandoPor(data)?.filter((p) => p.name.toLowerCase()
+          { dadosFiltrados?.filter((p) => p.name.toLowerCase()
             .includes(name.toLowerCase()))
             .map((planet) => (
               <tr key={ planet.name }>

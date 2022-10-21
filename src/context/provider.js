@@ -1,5 +1,5 @@
 import teste from 'prop-types';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import StarWarsContext from './context';
 
 function Provider({ children }) {
@@ -10,18 +10,53 @@ function Provider({ children }) {
   const [comparison, setComparison] = useState('maior que');
   const [number, setNumber] = useState(0);
   const [filters, setFilters] = useState([]);
-  const [podeFiltrar, setPodeFiltrar] = useState(false);
+  const [dadosFiltrados, setDadosFiltrados] = useState([]);
+  const [estaFiltrando, setEstaFiltrando] = useState(false);
 
   useEffect(() => {
     const fetchSWApi = async () => {
       const response = await fetch('https://swapi.dev/api/planets');
       const { results } = await response.json();
       setData(results);
+      setDadosFiltrados(results);
       const keys = Object.keys(results[0]);
       setChaves(keys);
     };
     fetchSWApi();
   }, []);
+
+  const filtrandoPor = useCallback(() => {
+    filters.forEach((f) => {
+      switch (f.filterComparison) {
+      case 'maior que': {
+        // console.log('ativou MAIOR que');
+        setDadosFiltrados(dadosFiltrados
+          .filter((p) => p[f.filterColumn] > Number(f.filterNumber)));
+        break;
+      }
+      case 'menor que': {
+        // console.log('ativou menor que');
+        setDadosFiltrados(dadosFiltrados
+          .filter((p) => p[f.filterColumn] < Number(f.filterNumber)));
+        break;
+      }
+      case 'igual a': {
+        // console.log('igual a');
+        setDadosFiltrados(dadosFiltrados
+          .filter((p) => p[f.filterColumn] === f.filterNumber));
+        break;
+      }
+      default: return dadosFiltrados;
+      }
+    });
+    setEstaFiltrando(false);
+  }, [dadosFiltrados, filters]);
+
+  useEffect(() => {
+    if (estaFiltrando) {
+      filtrandoPor();
+    }
+  }, [filters, estaFiltrando, filtrandoPor]);
 
   const searchByName = ({ target }) => {
     setName(target.value);
@@ -39,8 +74,7 @@ function Provider({ children }) {
     setNumber(target.value);
   };
 
-  const filteringBy = () => {
-    setPodeFiltrar(true);
+  const filteringBy = useCallback(() => {
     setFilters((prevState) => [
       ...prevState,
       {
@@ -49,18 +83,8 @@ function Provider({ children }) {
         filterNumber: number,
       },
     ]);
-  };
-
-  const filtrandoPor = () => {
-    if (podeFiltrar) {
-      switch (comparison) {
-      case 'maior que': return data.filter((p) => p[columnValue] > Number(number));
-      case 'menor que': return data.filter((p) => p[columnValue] < Number(number));
-      default: return data.filter((p) => p[columnValue] === number);
-      }
-    }
-    return data;
-  };
+    setEstaFiltrando(true);
+  }, [columnValue, comparison, number]);
 
   const context = useMemo(() => ({
     data,
@@ -70,14 +94,14 @@ function Provider({ children }) {
     comparison,
     number,
     filters,
+    dadosFiltrados,
     searchByName,
     searchByColumnValue,
     searchByComparison,
     searchByNumber,
     filteringBy,
-    filtrandoPor,
   }), [data, chaves, name, columnValue, comparison, number,
-    filters, filteringBy, filtrandoPor]);
+    filters, dadosFiltrados, filteringBy]);
 
   return (
     <StarWarsContext.Provider value={ context }>

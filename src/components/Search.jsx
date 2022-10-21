@@ -3,7 +3,7 @@ import StarWarsContext from '../context/context';
 
 function Search() {
   const { name, searchByName, columnValue,
-    searchByColumnValue, comparison, searchByComparison,
+    searchByColumnValue, comparison, filters, searchByComparison,
     number, searchByNumber, filteringBy } = useContext(StarWarsContext);
   return (
     <form>
@@ -24,7 +24,7 @@ function Search() {
         <label htmlFor="sbf">
           Selecione por
           <select
-            id="sesbsbff"
+            id="sbf"
             name="sbf"
             data-testid="column-filter"
             value={ columnValue }
@@ -67,6 +67,17 @@ function Search() {
         >
           Filtrar
         </button>
+      </div>
+      <div>
+        { filters.map((filtro, index) => (
+          <div key={ index } className="filtroAplicado">
+            {filtro.filterColumn}
+            { ' ' }
+            {filtro.filterComparison}
+            { ' ' }
+            {filtro.filterNumber}
+          </div>
+        )) }
       </div>
     </form>
   );
