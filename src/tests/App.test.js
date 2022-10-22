@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event';
 import App from '../App';
 
 describe('Testa o componente Search', () => {
@@ -24,5 +24,9 @@ describe('Testa o componente Search', () => {
     userEvent.type(valueInput, '1000');
     const filterButton = screen.getByTestId('button-filter');
     userEvent.click(filterButton);
+    userEvent.click(filterButton);
+    const xButton = screen.getAllByRole('button', { name: /x/i });
+    userEvent.click(xButton[0]);
+    userEvent.click(screen.getByTestId('button-remove-filters'));
   });
 });
